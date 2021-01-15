@@ -21,7 +21,7 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
   download_hfd(url,path)
   pcw<-load_hfd(paste0(path,"/pcw.csv"),exclude_date=exclude_date,range=range)
   prw<-load_hfd(paste0(path,"/prw.csv"),exclude_date=exclude_date,range=range)
-  release<-rotate(pcw,crisis_date=crisis_date,window="release")
+  release<-rotate(prw,crisis_date=crisis_date,window="release")
   conference<-rotate(pcw,crisis_date=crisis_date,window="conference")
   return(full_join(release,conference,by="date"))
 }
