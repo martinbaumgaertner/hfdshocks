@@ -35,8 +35,11 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
     filter_at(vars(-date), any_vars(!is.na(.))) %>%
     filter(date >= range[1] & date<= range[2])
 
-  if(reproduce==T){
-    data[data$date==as.POSIXct("2011-07-07",tz="UTC"),"ois_10y"]<-(-0.24999999999999999) #(tiny) error in paper code uncomment to reproduce
+  if(reproduce==T&suffix=="release"){
+    data[data$date==as.POSIXct("2011-07-07",tz="UTC"),"ois_10y"]<-(-0.249999999999995) #(tiny) error in paper code uncomment to reproduce
+  }
+  if(reproduce==T&suffix=="conference"){
+    data[data$date==as.POSIXct("2011-07-07",tz="UTC"),"ois_10y"]<-(2.34999999999999) #(tiny) error in paper code uncomment to reproduce
   }
 
   if(!is.null(exclude_date)){
