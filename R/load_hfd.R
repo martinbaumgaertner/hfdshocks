@@ -36,7 +36,7 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
 
   if(!is.null(exclude_date)){
     data<-data %>%
-      filter(!(date %in% as.POSIXlt(exclude_date,tz="UTC")))
+      filter(!(date %in% as.POSIXct(exclude_date,tz="UTC")))
   }
 
   data<-data %>%
