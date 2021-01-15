@@ -5,7 +5,7 @@
 #' @param path path to data
 #' @param exclude_date vector of dates to exclude
 #' @param range Defines time window. Needs to be a vector of two dates
-#'  @param reproduce logical; TRUE for exact factors Altavilla et al. 2019 factors
+#' @param reproduce logical; TRUE for exact factors Altavilla et al. 2019 factors
 #'
 #' @return
 #'
