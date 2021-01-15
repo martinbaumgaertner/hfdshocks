@@ -26,9 +26,9 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
 
   data<-read_csv(path) %>%
     setNames(tolower(names(.)))%>%
-    mutate(ois_2y_d = coalesce(ois_2y_d, de2y_d)) %>%
-    mutate(ois_5y_d = coalesce(ois_5y_d, de5y_d)) %>%
-    mutate(ois_10y_d = coalesce(ois_10y_d, de10y_d))%>%
+    mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
+    mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
+    mutate(ois_10y = coalesce(ois_10y, de10y))%>%
     select(date,contains("1m"),contains("3m"),contains("6m"),contains("1y"),contains("2y"),contains("5y"),contains("10y"),-contains("15y")) %>% #here too
     select(date,starts_with("ois"))%>%
     filter_at(vars(-date), any_vars(!is.na(.))) %>%
