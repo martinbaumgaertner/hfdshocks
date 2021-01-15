@@ -5,6 +5,7 @@
 #' @param data specify which data to process
 #' @param crisis_date specify the starting date of the crisis for the rotation of the QE shocks
 #' @param window which window do you want to rotate? choose between "release" or "conference"
+#' @param reproduce logical; TRUE for exact factors Altavilla et al. 2019 factors
 #'
 #' @return
 #'
@@ -15,13 +16,16 @@
 #' rotate(pcw,crisis_date="2008-09-04",window="conference")
 #' @export
 #' @importFrom NlcOptim dplyr stats lm
-rotate<-function(data,crisis_date="2008-09-04",window="release"){
+rotate<-function(data,crisis_date="2008-09-04",window="release",reproduce=F){
 
   ois_matrix<-data %>%
     select(starts_with("ois"))%>%
     as.matrix()
 
-  #ois_matrix[114,7]<--0.24999999999999999 #(tiny) error in paper code uncomment to reproduce
+  if(reproduce==T){
+    ois_matrix[114,7]<--0.24999999999999999 #(tiny) error in paper code uncomment to reproduce
+  }
+
   date_vector<-data %>%
     pull(date)
 
