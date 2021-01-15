@@ -1,11 +1,15 @@
 Package: hfdshocks
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Estimate monetary policy shocks with high-frequency data 
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Martin Baumgärtner
+Maintainer: Martin Baumgärtner <martin.baumgaertner@posteo.de>
+Description: This package allows monetary policy shocks to be calculated from high-frequency data, based on the methodology and data of     Altavilla, C., Brugnolini, L., Gürkaynak, R. S., Motto, R., & Ragusa, G. (2019). Measuring euro area monetary policy. Journal of Monetary Economics, 108, 162-179.
+License: GPL (>=3)
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
+import: NlcOptim,
+         readxl,
+         tidyverse,
+         curl
+RoxygenNote: 7.1.1
