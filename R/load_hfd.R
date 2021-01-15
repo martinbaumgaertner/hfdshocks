@@ -15,7 +15,7 @@
 #'               range=c("2001-12-31","2018-09-13"))
 #' @export
 #' @importFrom NlcOptim dplyr
-load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),reproduce==T){
+load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),reproduce=F){
 
   if(grepl('mew', path)){
     suffix<-"mew"
