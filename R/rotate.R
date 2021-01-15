@@ -66,7 +66,7 @@ rotate<-function(data,crisis_date="2008-09-04",window="release"){
 
   #rotate factors
   rotate_factors<-Factors%*%matrix(sol$par,nrow=3) %>%
-    as_tibble(.)
+    as_tibble(., .name_repair = "unique")
 
   #rename and scale based on corresponding ois rate
   if(window=="release"){

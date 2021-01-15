@@ -24,7 +24,7 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
     suffix<-"conference"
   }
 
-  data<-read_csv(path) %>%
+  data<-read_csv(path,col_types=cols(.default = col_double(),date = col_datetime(format = ""))) %>%
     setNames(tolower(names(.)))%>%
     mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
     mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
