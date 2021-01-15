@@ -66,13 +66,13 @@ rotate<-function(data,crisis_date="2008-09-04",window="release"){
 
   #rotate factors
   rotate_factors<-Factors%*%matrix(sol$par,nrow=3) %>%
-    as_tibble(., .name_repair = "unique")
+    as_tibble(.,col_names = FALSE)
 
   #rename and scale based on corresponding ois rate
   if(window=="release"){
     rotate_factors<-rotate_factors %>%
-      select("...1") %>%
-      rename(Target="...1")
+      select(V1) %>%
+      rename(Target=V1)
 
     full<-bind_cols(data %>%
                       select(date),rotate_factors,ois_matrix %>% as_tibble(.))
@@ -85,7 +85,7 @@ rotate<-function(data,crisis_date="2008-09-04",window="release"){
   }else{
     rotate_factors<-rotate_factors %>%
       select(1:3) %>%
-      rename(Timing="...1",FG="...2",QE="...3")
+      rename(Timing=V1,FG=V2,QE=V3)
 
     full<-bind_cols(data %>%
                       select(date),rotate_factors,ois_matrix %>% as_tibble(.))
