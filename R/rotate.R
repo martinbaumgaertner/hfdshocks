@@ -65,7 +65,7 @@ rotate<-function(data,crisis_date="2008-09-04",window="release"){
 
   #rotate factors
   rotate_factors<-Factors%*%matrix(sol$par,nrow=3) %>%
-    as_tibble(.,.name_repair = c("unique"))
+    as_tibble(.,.name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE))
 
   #rename and scale based on corresponding ois rate
   if(window=="release"){
