@@ -7,7 +7,7 @@ The corresponding Julia/R/Stata code and sample data can be found here: <http://
 
 # Installation:
 
-> library(“devtools”) 
+> library("devtools") 
 >
 > devtools::install_github("https://github.com/martinbaumgaertner/hfdshocks.git") 
 >
