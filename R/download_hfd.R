@@ -18,14 +18,14 @@ download_hfd<-function(url,path){
 
   curl::curl_download(url, paste0(path,"temporary.xlsx"))
 
-  prw <- readxl::read_excel(paste0(path,"temporary.xlsx"),sheet = "Press Release Window", lazy = FALSE)
+  prw <- readxl::read_excel(paste0(path,"temporary.xlsx"),sheet = "Press Release Window")
   readr::write_csv(prw,paste0(path, "prw.csv"))
 
-  pcw <- readxl::read_excel(paste0(path,"temporary.xlsx"),sheet = "Press Conference Window", lazy = FALSE) %>%
+  pcw <- readxl::read_excel(paste0(path,"temporary.xlsx"),sheet = "Press Conference Window") %>%
     mutate(date=prw$date) #small formating fix for excel mistake
   readr::write_csv(pcw,paste0(path, "pcw.csv"))
 
-  mew <- readxl::read_excel(paste0(path,"temporary.xlsx"),sheet = "Monetary Event Window", lazy = FALSE)
+  mew <- readxl::read_excel(paste0(path,"temporary.xlsx"),sheet = "Monetary Event Window")
   readr::write_csv(mew,paste0(path, "mew.csv"))
 
   file.remove(paste0(path,"temporary.xlsx"))
