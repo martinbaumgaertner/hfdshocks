@@ -12,5 +12,8 @@ Depends: R (>= 3.5.0),
          NlcOptim,
          readxl,
          tidyverse,
-         curl
+         curl,
+         sandwich,
+         lmtest,
+         data.table
 RoxygenNote: 7.1.1
