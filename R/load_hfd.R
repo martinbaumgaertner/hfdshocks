@@ -15,7 +15,7 @@
 #'               range=c("2001-12-31","2018-09-13"))
 #' @export
 #' @importFrom NlcOptim dplyr
-load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),reproduce=F){
+load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),reproduce=F,select_ois=T){
 
   if(grepl('mew', path)){
     suffix<-"mew"
@@ -25,15 +25,26 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
     suffix<-"conference"
   }
 
-  data<-read_csv(path,col_types=cols(.default = col_double(),date = col_datetime(format = ""))) %>%
-    setNames(tolower(names(.)))%>%
-    dplyr::mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
-    dplyr::mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
-    dplyr::mutate(ois_10y = coalesce(ois_10y, de10y))%>%
-    dplyr::select(date,contains("m"),contains("1y"),contains("2y"),contains("5y"),contains("10y"),-contains("15y")) %>% #here too
-    dplyr::select(date,starts_with("ois"))%>%
-    dplyr::filter_at(vars(-date), any_vars(!is.na(.))) %>%
-    dplyr::filter(date >= as.POSIXct(range[1],tz="UTC") & date<= as.POSIXct(range[2],tz="UTC"))
+  if(select_ois==T){
+    data<-read_csv(path,col_types=cols(.default = col_double(),date = col_datetime(format = ""))) %>%
+      setNames(tolower(names(.)))%>%
+      dplyr::mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
+      dplyr::mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
+      dplyr::mutate(ois_10y = coalesce(ois_10y, de10y))%>%
+      dplyr::select(date,contains("m"),contains("1y"),contains("2y"),contains("5y"),contains("10y"),-contains("15y")) %>% #here too
+      dplyr::select(date,starts_with("ois"))%>%
+      dplyr::filter_at(vars(-date), any_vars(!is.na(.))) %>%
+      dplyr::filter(date >= as.POSIXct(range[1],tz="UTC") & date<= as.POSIXct(range[2],tz="UTC"))
+  }else{
+    data<-read_csv(path,col_types=cols(.default = col_double(),date = col_datetime(format = ""))) %>%
+      setNames(tolower(names(.)))%>%
+      dplyr::mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
+      dplyr::mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
+      dplyr::mutate(ois_10y = coalesce(ois_10y, de10y))%>%
+      dplyr::filter(date >= as.POSIXct(range[1],tz="UTC") & date<= as.POSIXct(range[2],tz="UTC"))
+  }
+
+
 
   if(reproduce==T&suffix=="release"){
     data[data$date==as.POSIXct("2011-07-07",tz="UTC"),"ois_10y"]<-(-0.249999999999995) #(tiny) error in paper code uncomment to reproduce
