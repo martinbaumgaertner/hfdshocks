@@ -27,11 +27,10 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
   pcw<-load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
   if(extended==F){
     release<-rotate(prw,crisis_date=crisis_date,window="release",extended=extended)
-    conference<-rotate(pcw,crisis_date=crisis_date,window="conference",extended=extended)
   }else{
     release<-rotate(prw,crisis_date=extended_release_date,window="release",extended=extended)
-    conference<-rotate(pcw,crisis_date=crisis_date,window="conference",extended=extended)
   }
+  conference<-rotate(pcw,crisis_date=crisis_date,window="conference",extended=extended)
 
   loadings_release<-loadings(prw,release)
   loadings_conference<-loadings(pcw,conference)
