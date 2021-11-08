@@ -27,13 +27,13 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
 
   data<-read_csv(path,col_types=cols(.default = col_double(),date = col_datetime(format = ""))) %>%
     setNames(tolower(names(.)))%>%
-    mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
-    mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
-    mutate(ois_10y = coalesce(ois_10y, de10y))%>%
-    select(date,contains("1m"),contains("3m"),contains("6m"),contains("1y"),contains("2y"),contains("5y"),contains("10y"),-contains("15y")) %>% #here too
-    select(date,starts_with("ois"))%>%
-    filter_at(vars(-date), any_vars(!is.na(.))) %>%
-    filter(date >= as.POSIXct(range[1],tz="UTC") & date<= as.POSIXct(range[2],tz="UTC"))
+    dplyr::mutate(ois_2y = coalesce(ois_2y, de2y)) %>%
+    dplyr::mutate(ois_5y = coalesce(ois_5y, de5y)) %>%
+    dplyr::mutate(ois_10y = coalesce(ois_10y, de10y))%>%
+    dplyr::select(date,contains("m"),contains("1y"),contains("2y"),contains("5y"),contains("10y"),-contains("15y")) %>% #here too
+    dplyr::select(date,starts_with("ois"))%>%
+    dplyr::filter_at(vars(-date), any_vars(!is.na(.))) %>%
+    dplyr::filter(date >= as.POSIXct(range[1],tz="UTC") & date<= as.POSIXct(range[2],tz="UTC"))
 
   if(reproduce==T&suffix=="release"){
     data[data$date==as.POSIXct("2011-07-07",tz="UTC"),"ois_10y"]<-(-0.249999999999995) #(tiny) error in paper code uncomment to reproduce
@@ -44,12 +44,12 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
 
   if(!is.null(exclude_date)){
     data<-data %>%
-      filter(!(date %in% as.POSIXct(exclude_date,tz="UTC")))
+      dplyr::filter(!(date %in% as.POSIXct(exclude_date,tz="UTC")))
   }
 
   data<-data %>%
     setNames(paste0(names(.),"_",suffix)) %>%
-    rename(date=paste0("date_",suffix))
+    dplyr::rename(date=paste0("date_",suffix))
 
   return(data)
 }

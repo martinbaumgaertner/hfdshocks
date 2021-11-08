@@ -18,7 +18,7 @@
 rotate<-function(data,crisis_date="2008-09-04",window="release",extended){
 
   ois_matrix<-data %>%
-    select(starts_with("ois"))%>%
+    dplyr::select(starts_with("ois"))%>%
     as.matrix()
 
   date_vector<-data %>%
@@ -88,53 +88,53 @@ rotate<-function(data,crisis_date="2008-09-04",window="release",extended){
 
     if(extended==T){
       rotate_factors<-rotate_factors %>%
-        select(1:2) %>%
-        rename(Target=1,
+        dplyr::select(1:2) %>%
+        dplyr::rename(Target=1,
                QE=2)
 
       full<-bind_cols(data %>%
-                        select(date),rotate_factors,ois_matrix %>% as_tibble(.))
+                        dplyr::select(date),rotate_factors,ois_matrix %>% as_tibble(.))
 
       scale_1 <-coef(lm(`ois_1m_release`~Target, data = full))[2]
-      scale_2 <-coef(lm(`ois_10y_release`~tbn, data = full))[2]
+      scale_2 <-coef(lm(`ois_10y_release`~QE, data = full))[2]
 
       rotate_factors<-rotate_factors %>%
-        mutate(Target = Target*scale_1,
-               tbn = tbn*scale_2)
+        dplyr::mutate(Target = Target*scale_1,
+                      QE = QE*scale_2)
     }else{
       rotate_factors<-rotate_factors %>%
-        select(1) %>%
-        rename(Target=1)
+        dplyr::select(1) %>%
+        dplyr::rename(Target=1)
 
       full<-bind_cols(data %>%
-                        select(date),rotate_factors,ois_matrix %>% as_tibble(.))
+                        dplyr::select(date),rotate_factors,ois_matrix %>% as_tibble(.))
 
       scale_1 <-coef(lm(`ois_1m_release`~Target, data = full))[2]
 
       rotate_factors<-rotate_factors %>%
-        mutate(Target = Target*scale_1)
+        dplyr::mutate(Target = Target*scale_1)
     }
 
   }else{
     rotate_factors<-rotate_factors %>%
-      select(1:3) %>%
-      rename(Timing=1,FG=2,QE=3)
+      dplyr::select(1:3) %>%
+      dplyr::rename(Timing=1,FG=2,QE=3)
 
     full<-bind_cols(data %>%
-                      select(date),rotate_factors,ois_matrix %>% as_tibble(.))
+                      dplyr::select(date),rotate_factors,ois_matrix %>% as_tibble(.))
     scale_4 <-coef(lm(`ois_6m_conference`~Timing, data = full))[2]
     scale_5 <-coef(lm(`ois_2y_conference`~FG, data = full))[2]
     scale_6 <-coef(lm(`ois_10y_conference`~QE, data = full))[2]
 
     rotate_factors<-rotate_factors %>%
-      mutate(Timing = Timing*scale_4,
+      dplyr::mutate(Timing = Timing*scale_4,
              FG = FG*scale_5,
              QE = QE*scale_6)
   }
 
 
   factors_scaled<-bind_cols(data %>%
-                              select(date),rotate_factors)
+                              dplyr::select(date),rotate_factors)
 
   return(factors_scaled)
 }

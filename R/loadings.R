@@ -1,6 +1,6 @@
 loadings<-function(ois_data,factors){
   loadings_release<-full_join(ois_data,factors,by="date") %>%
-    select(-date)%>%
+    dplyr::select(-date)%>%
     pivot_longer(cols=!starts_with("ois"),names_to = "factor",values_to = "shock") %>%
     pivot_longer(cols=starts_with("ois"),names_to = "ois",values_to = "ois_value")  %>%
     split(list(.$factor,.$ois))%>%

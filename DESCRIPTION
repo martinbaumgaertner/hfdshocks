@@ -11,9 +11,9 @@ LazyData: TRUE
 Depends: R (>= 3.5.0),
          NlcOptim,
          readxl,
-         tidyverse,
          curl,
          sandwich,
          lmtest,
-         data.table
+         data.table,
+         tidyverse
 RoxygenNote: 7.1.1
