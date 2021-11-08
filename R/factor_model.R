@@ -46,5 +46,5 @@ factor_model<-function(Z,center=T,scaleZ=F){
   Lambda<-sqrt(nn)*ev$vectors
   Fa=X%*%Lambda/nn
 
-  return(list(factors=Fa,loadings=Lambda,eigenvalues=lamda,center=meanZ,scale=sdZ))
+  return(list(factors=Fa,loadings=Lambda,eigenvalues=lamda,center=meanZ,scale=sdZ,data=Z))
 }
