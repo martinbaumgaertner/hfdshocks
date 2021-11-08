@@ -33,7 +33,7 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
     select(date,contains("1m"),contains("3m"),contains("6m"),contains("1y"),contains("2y"),contains("5y"),contains("10y"),-contains("15y")) %>% #here too
     select(date,starts_with("ois"))%>%
     filter_at(vars(-date), any_vars(!is.na(.))) %>%
-    filter(date >= range[1] & date<= range[2])
+    filter(date >= as.POSIXct(range[1],tz="UTC") & date<= as.POSIXct(range[2],tz="UTC"))
 
   if(reproduce==T&suffix=="release"){
     data[data$date==as.POSIXct("2011-07-07",tz="UTC"),"ois_10y"]<-(-0.249999999999995) #(tiny) error in paper code uncomment to reproduce
