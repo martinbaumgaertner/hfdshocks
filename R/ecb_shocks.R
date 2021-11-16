@@ -21,8 +21,9 @@
 ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",
                      path="",exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),
                      crisis_date="2008-09-04",remove_data=T,reproduce=F,extended=F,extended_release_date="2015-12-03",
-                     loadings=F){
+                     loadings=F,return_data="all"){
   download_hfd(url,path)
+
   prw<-load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
   pcw<-load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
   if(extended==F){
@@ -43,10 +44,16 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
     unlink(paste0(path,"mew.csv"), recursive=TRUE)
   }
 
-  if(loadings==F){
-    return(factors)
-  }else{
-    return(list("factors"=factors,"loadings_release"=loadings_release,"loadings_conference"=loadings_conference))
+  out<-list("factors"=factors)
+  if(loadings==t){
+    out$loadings=list("release"=loadings_release,"conference"=loadings_conference)
+  }
+  if(return_data=="all"){
+    out$data=list("prw"=load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
+                  "pcw"=load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F))
+  }else if(return_data=="ois"){
+    out$data=list("prw"=prw,
+                  "pcw"=pcw)
   }
 }
 
