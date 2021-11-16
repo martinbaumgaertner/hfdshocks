@@ -8,7 +8,7 @@ loadings<-function(ois_data,factors){
     map( function(u) tibble(coef=coef(u)[2],ser=sqrt(vcovHC(u)[2,2]),r2=summary(u)$r.squared)) %>%
     rbindlist(idcol = TRUE ) %>%
     tibble() %>%
-    separate(.id,c("shock","ois"),"\\.") %>%
-    mutate(ois=str_remove(ois,"_release|_conference"))
+    separate(.id,c("shock","ois"),"\\.")# %>%
+    #mutate(ois=str_remove(ois,"_release|_conference"))
   return(loadings_release)
 }
