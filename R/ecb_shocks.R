@@ -33,9 +33,7 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
   }
   conference<-rotate(pcw,crisis_date=crisis_date,window="conference",extended=extended)
 
-  factors=full_join(release,conference,by="date")
-
-  out<-list("factors"=factors)
+  out<-list("factors"=list("release"=release,"conference"=conference))
   if(loadings==T){
     loadings_release<-loadings(prw,release)
     loadings_conference<-loadings(pcw,conference)
