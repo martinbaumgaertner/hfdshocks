@@ -33,19 +33,12 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
   }
   conference<-rotate(pcw,crisis_date=crisis_date,window="conference",extended=extended)
 
-  loadings_release<-loadings(prw,release)
-  loadings_conference<-loadings(pcw,conference)
-
   factors=full_join(release,conference,by="date")
 
-  if(remove_data==T){
-    unlink(paste0(path,"prw.csv"), recursive=TRUE)
-    unlink(paste0(path,"pcw.csv"), recursive=TRUE)
-    unlink(paste0(path,"mew.csv"), recursive=TRUE)
-  }
-
   out<-list("factors"=factors)
-  if(loadings==t){
+  if(loadings==T){
+    loadings_release<-loadings(prw,release)
+    loadings_conference<-loadings(pcw,conference)
     out$loadings=list("release"=loadings_release,"conference"=loadings_conference)
   }
   if(return_data=="all"){
@@ -55,6 +48,14 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
     out$data=list("prw"=prw,
                   "pcw"=pcw)
   }
+
+  if(remove_data==T){
+    unlink(paste0(path,"prw.csv"), recursive=TRUE)
+    unlink(paste0(path,"pcw.csv"), recursive=TRUE)
+    unlink(paste0(path,"mew.csv"), recursive=TRUE)
+  }
+
+  return(out)
 }
 
 
