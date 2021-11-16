@@ -90,17 +90,17 @@ rotate<-function(data,crisis_date="2008-09-04",window="release",extended){
       rotate_factors<-rotate_factors %>%
         dplyr::select(1:2) %>%
         dplyr::rename(Target=1,
-               QE_release=2)
+               QE=2)
 
       full<-bind_cols(data %>%
                         dplyr::select(date),rotate_factors,ois_matrix %>% as_tibble(.))
 
       scale_1 <-coef(lm(ois_1m_release~Target, data = full))[2]
-      scale_2 <-coef(lm(ois_10y_release~QE_release, data = full))[2]
+      scale_2 <-coef(lm(ois_10y_release~QE, data = full))[2]
 
       rotate_factors<-rotate_factors %>%
         dplyr::mutate(Target = Target*scale_1,
-                      QE_release = QE_release*scale_2)
+                      QE = QE*scale_2)
     }else{
       rotate_factors<-rotate_factors %>%
         dplyr::select(1) %>%
