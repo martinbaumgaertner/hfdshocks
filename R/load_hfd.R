@@ -58,9 +58,9 @@ load_hfd<-function(path,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),r
       dplyr::filter(!(date %in% as.POSIXct(exclude_date,tz="UTC")))
   }
 
-  data<-data %>%
-    setNames(paste0(names(.),"_",suffix)) %>%
-    dplyr::rename(date=paste0("date_",suffix))
+  # data<-data %>%
+  #   setNames(paste0(names(.),"_",suffix)) %>%
+  #   dplyr::rename(date=paste0("date_",suffix))
 
   return(data)
 }
