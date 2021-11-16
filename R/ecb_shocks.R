@@ -24,29 +24,29 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
                      loadings=F,return_data="all"){
   download_hfd(url,path)
 
-  prw<-load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
-  pcw<-load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
+  release<-load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
+  conference<-load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
   if(extended==F){
-    release<-rotate(prw,crisis_date=crisis_date,window="release",extended=extended)
+    release_factors<-rotate(release,crisis_date=crisis_date,window="release",extended=extended)
   }else{
-    release<-rotate(prw,crisis_date=extended_release_date,window="release",extended=extended)
+    release_factors<-rotate(release,crisis_date=extended_release_date,window="release",extended=extended)
   }
-  conference<-rotate(pcw,crisis_date=crisis_date,window="conference",extended=extended)
+  conference_factors<-rotate(conference,crisis_date=crisis_date,window="conference",extended=extended)
 
-  out<-list("factors"=list("release"=release,"conference"=conference))
+  out<-list("factors"=list("release"=release_factors,"conference"=conference_factors))
   if(loadings==T){
-    loadings_release<-loadings(prw,release)
-    loadings_conference<-loadings(pcw,conference)
+    loadings_release<-loadings(release,release_factors)
+    loadings_conference<-loadings(conference,conference_factors)
     out$loadings=list("release"=loadings_release,"conference"=loadings_conference)
   }
   if(return_data=="all"){
-    out$data=list("prw"=load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
-                  "pcw"=load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
-                  "mew"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F))
+    out$data=list("release"=load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
+                  "conference"=load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
+                  "monetary"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F))
   }else if(return_data=="ois"){
-    out$data=list("prw"=prw,
-                  "pcw"=pcw,
-                  "mew"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = T))
+    out$data=list("release"=release,
+                  "conference"=conference,
+                  "monetary"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = T))
   }
 
   if(remove_data==T){
