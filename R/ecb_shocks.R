@@ -43,10 +43,12 @@ ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD
   }
   if(return_data=="all"){
     out$data=list("prw"=load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
-                  "pcw"=load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F))
+                  "pcw"=load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
+                  "mew"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F))
   }else if(return_data=="ois"){
     out$data=list("prw"=prw,
-                  "pcw"=pcw)
+                  "pcw"=pcw,
+                  "mew"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = T))
   }
 
   if(remove_data==T){
