@@ -109,7 +109,7 @@ rotate<-function(data,crisis_date="2008-09-04",window="release",extended){
       full<-bind_cols(data %>%
                         dplyr::select(date),rotate_factors,ois_matrix %>% as_tibble(.))
 
-      scale_1 <-coef(lm(ois_1m_release~Target, data = full))[2]
+      scale_1 <-coef(lm(ois_1m~Target, data = full))[2]
 
       rotate_factors<-rotate_factors %>%
         dplyr::mutate(Target = Target*scale_1)
@@ -122,9 +122,9 @@ rotate<-function(data,crisis_date="2008-09-04",window="release",extended){
 
     full<-bind_cols(data %>%
                       dplyr::select(date),rotate_factors,ois_matrix %>% as_tibble(.))
-    scale_4 <-coef(lm(ois_6m_conference~Timing, data = full))[2]
-    scale_5 <-coef(lm(ois_2y_conference~FG, data = full))[2]
-    scale_6 <-coef(lm(ois_10y_conference~QE, data = full))[2]
+    scale_4 <-coef(lm(ois_6m~Timing, data = full))[2]
+    scale_5 <-coef(lm(ois_2y~FG, data = full))[2]
+    scale_6 <-coef(lm(ois_10y~QE, data = full))[2]
 
     rotate_factors<-rotate_factors %>%
       dplyr::mutate(Timing = Timing*scale_4,
