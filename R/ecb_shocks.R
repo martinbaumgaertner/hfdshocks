@@ -21,19 +21,28 @@
 ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",
                      path="",exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),
                      crisis_date="2008-09-04",remove_data=T,reproduce=F,extended=F,extended_release_date="2015-12-03",
-                     loadings=F,return_data="all"){
+                     loadings=F,return_data="all",rotation_test=F){
   download_hfd(url,path)
 
   release<-load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
   conference<-load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
-  if(extended==F){
-    release_factors<-rotate(release,crisis_date=crisis_date,window="release",extended=extended)
+  if(rotation_test==F){
+    if(extended==F){
+      release_factors<-rotate(release,crisis_date=crisis_date,window="release",extended=extended)
+    }else{
+      release_factors<-rotate(release,crisis_date=extended_release_date,window="release",extended=extended)
+    }
   }else{
-    release_factors<-rotate(release,crisis_date=extended_release_date,window="release",extended=extended)
+    if(extended==F){
+      release_factors<-rotate1(release,crisis_date=crisis_date,window="release",extended=extended)
+    }else{
+      release_factors<-rotate2(release,crisis_date=extended_release_date,window="release",extended=extended)
+    }
   }
   conference_factors<-rotate(conference,crisis_date=crisis_date,window="conference",extended=extended)
 
   out<-list("factors"=list("release"=release_factors,"conference"=conference_factors))
+
   if(loadings==T){
     loadings_release<-loadings(release,release_factors)
     loadings_conference<-loadings(conference,conference_factors)
