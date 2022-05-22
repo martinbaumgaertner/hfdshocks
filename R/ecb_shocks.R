@@ -3,14 +3,16 @@
 #' @description wrapper around all functions to download, process and return the ecb shocks based on Altavilla, C., Brugnolini, L., Gürkaynak, R. S., Motto, R., & Ragusa, G. (2019). Measuring euro area monetary policy. Journal of Monetary Economics, 108, 162-179.
 #'
 #' @param url specify which data to process
-#' @param path Defines the download location
+#' @param path Defines the download location. Note that the folder must exist.
 #' @param exclude_date vector of dates to exclude
 #' @param range Defines time window. Needs to be a vector of two dates
 #' @param crisis_date specify the starting date of the crisis for the rotation of the QE shocks
 #' @param remove_data should local data be removed after calculation?
 #' @param reproduce logical; TRUE for exact factors Altavilla et al. 2019 factors
+#' @param extended logical; TRUE for identification based on Baumgärtner (2021)
+#' @param extended_release_date character; Date for the second rotation
 #'
-#' @return
+#' @return A list containing the factors per window, the loadings per window and the raw data per window if choosen.
 #'
 #' @examples
 #' x<-ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx","",

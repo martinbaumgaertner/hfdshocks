@@ -23,17 +23,23 @@ There are various setting options:
 
 ​	**Exclude outlier**
 
-​	If you want to exclude data as outliers, enter them here. No specific date format is required. The standard excludes 3 data points based on the original 
-​    paper.  : 2001-09-17, 2008-10-08, 2008-11-06
+​	If you want to exclude data as outliers, enter them here. No specific date format is required. The standard excludes 3 data points based on the original paper: 2001-09-17, 2008-10-08, 2008-11-06
 
 ​	**Specify data window**
 
-​	Changes the window of the input data. This influences the final result! Until now, I recommend using all data up to the current point in time and then
-​    shorten the time series afterwards. Nevertheless, the default in the package is the time window used in the original paper
+​	Changes the window of the input data. This influences the final result! Until now, I recommend using all data up to the current point in time and then shorten the time series afterwards. Nevertheless, the default in the package is the time window used in the original paper.
 
 ​	**Specify Crisis date**
 
 ​	The third factor (QE) is calculated by minimising the variance before the financial crisis. The corresponding value can be changed here.
+
+​	**Second QE Factor**
+
+..Based on this [paper](https://www.uni-marburg.de/en/fb02/research-groups/economics/macroeconomics/research/magks-joint-discussion-papers-in-economics/papers/2022-papers/03-2022_baumgaertner.pdf) a second QE surprise can be identified. Use `extended=T`and `extended_release_date="2015-12-03"` to activate and adjust the identification accordingly.
+
+​	**View raw data and loadings**
+
+..use `return_data = "all"` and `loadings=T` to save the database and look into the loadings.
 
 *Disclaimer: Although the methodology is not  mine, all errors are first to be credited to me personally. Please note  that this package has not yet been tested extensively. I am grateful for  every hint for improvement.*
 
@@ -45,7 +51,7 @@ library(devtools)
 devtools::install_github("https://github.com/martinbaumgaertner/hfdshocks.git") 
 
 library(hfdshocks)
-ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx","",
-               exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),
-               range=c("2001-12-31","2018-09-13"),crisis_date="2008-09-04")
+ecb_shocks(range=c("2001-12-31","2021-10-13"),crisis_date="2008-09-04",path="data/",
+                 reproduce=F,extended=T,extended_release_date="2015-12-03",
+                 loadings=T,return_data = "all")
 ```
