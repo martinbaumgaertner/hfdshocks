@@ -30,7 +30,7 @@ rotate1<-function(data,crisis_date="2008-09-04",window="release",extended){
 
       scale_1 <-coef(lm(ois_1m~Target, data = full))[2]
 
-      rotate_factors1<-rotate_factors %>%
+      rotate_factors<-rotate_factors %>%
         dplyr::mutate(Target = Target*scale_1)
 
 
