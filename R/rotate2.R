@@ -32,7 +32,7 @@ rotate2<-function(data,crisis_date="2008-09-04",window="release",extended){
     f=rbind(f,x[1]*x[2] + x[3]*x[4] - 0)
     #f=rbind(f,x[2]*x[1] + x[4]*x[3] - 0)
     #second and third factors does not load on one month rate
-    f=rbind(f,x[2]*loading[1,1] + x[4]*loading[1,2] -0)
+    f=rbind(f,x[3]*loading[1,1] + x[4]*loading[1,2] -0)
     return(list(ceq=f,c=NULL))
   }
 
