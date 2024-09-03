@@ -6,25 +6,47 @@
 \usage{
 ecb_shocks(
   url = "https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",
-  path = getwd(),
-  exclude_date = c("2001-09-17", "2008-10-08", "2008-11-06"),
-  range = c("2001-12-31", "2018-09-13"),
-  crisis_date = "2008-09-04"
+  path = "",
+  exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"),
+  date_range = c("2001-12-31", "2018-09-13"),
+  crisis_date = "2008-09-04",
+  reproduce = FALSE,
+  extended = FALSE,
+  extended_release_date = "2015-12-03",
+  include_loadings = FALSE,
+  return_data_type = "all"
 )
 }
 \arguments{
+\item{url}{specify which data to process}
+
+\item{path}{Defines the download location. Note that the folder must exist.}
+
+\item{exclude_dates}{vector of dates to exclude}
+
+\item{date_range}{Defines time window. Needs to be a vector of two dates}
+
 \item{crisis_date}{specify the starting date of the crisis for the rotation of the QE shocks}
 
-\item{data}{specify which data to process}
+\item{reproduce}{logical; TRUE for exact factors Altavilla et al. 2019 factors}
 
-\item{window}{which window do you want to rotate? choose between "release" or "conference"}
+\item{extended}{logical; TRUE for identification based on Baumgärtner (2021)}
+
+\item{extended_release_date}{character; Date for the second rotation}
+
+\item{include_loadings}{logical; TRUE to include loadings in the output}
+
+\item{return_data_type}{character; "all" to return all data, "ois" to return only OIS data}
 }
 \value{
-
+A list containing the factors per window, the loadings per window, and the raw data per window if chosen.
 }
 \description{
-wrapper around all functions to download, process and return the ecb shocks based on Altavilla, C., Brugnolini, L., Gürkaynak, R. S., Motto, R., & Ragusa, G. (2019). Measuring euro area monetary policy. Journal of Monetary Economics, 108, 162-179.
+Wrapper around all functions to download, process, and return the ECB shocks based on Altavilla et al. (2019).
 }
 \examples{
-x<-ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",getwd(),exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),crisis_date="2008-09-04")
+x <- ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", "",
+  exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"),
+  date_range = c("2001-12-31", "2018-09-13"), crisis_date = "2008-09-04"
+)
 }

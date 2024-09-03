@@ -1,74 +1,74 @@
 #' @title ecb_shocks
 #'
-#' @description wrapper around all functions to download, process and return the ecb shocks based on Altavilla, C., Brugnolini, L., Gürkaynak, R. S., Motto, R., & Ragusa, G. (2019). Measuring euro area monetary policy. Journal of Monetary Economics, 108, 162-179.
+#' @description Wrapper around all functions to download, process, and return the ECB shocks based on Altavilla et al. (2019).
 #'
 #' @param url specify which data to process
 #' @param path Defines the download location. Note that the folder must exist.
-#' @param exclude_date vector of dates to exclude
-#' @param range Defines time window. Needs to be a vector of two dates
+#' @param exclude_dates vector of dates to exclude
+#' @param date_range Defines time window. Needs to be a vector of two dates
 #' @param crisis_date specify the starting date of the crisis for the rotation of the QE shocks
-#' @param remove_data should local data be removed after calculation?
 #' @param reproduce logical; TRUE for exact factors Altavilla et al. 2019 factors
 #' @param extended logical; TRUE for identification based on Baumgärtner (2021)
 #' @param extended_release_date character; Date for the second rotation
+#' @param include_loadings logical; TRUE to include loadings in the output
+#' @param return_data_type character; "all" to return all data, "ois" to return only OIS data
 #'
-#' @return A list containing the factors per window, the loadings per window and the raw data per window if choosen.
+#' @return A list containing the factors per window, the loadings per window, and the raw data per window if chosen.
 #'
 #' @examples
-#' x<-ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx","",
-#'               exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),
-#'               range=c("2001-12-31","2018-09-13"),crisis_date="2008-09-04")
+#' x <- ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", "",
+#'   exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"),
+#'   date_range = c("2001-12-31", "2018-09-13"), crisis_date = "2008-09-04"
+#' )
 #' @export
-#' @importFrom
-ecb_shocks<-function(url="https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",
-                     path="",exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"),
-                     crisis_date="2008-09-04",remove_data=T,reproduce=F,extended=F,extended_release_date="2015-12-03",
-                     loadings=F,return_data="all",rotation_test=F){
-  download_hfd(url,path)
+#' @importFrom dplyr mutate
+#' @importFrom readxl read_excel
+#' @importFrom curl curl_download
+#' @importFrom readr write_csv
+ecb_shocks <- function(url = "https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",
+                       path = "", exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"), date_range = c("2001-12-31", "2018-09-13"),
+                       crisis_date = "2008-09-04", reproduce = FALSE, extended = FALSE, extended_release_date = "2015-12-03",
+                       include_loadings = FALSE, return_data_type = "all") {
+  data <- download_hfd(url, path)
 
-  release<-load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
-  conference<-load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce)
-  if(rotation_test==F){
-    if(extended==F){
-      release_factors<-rotate(release,crisis_date=crisis_date,window="release",extended=extended)
-    }else{
-      release_factors<-rotate(release,crisis_date=extended_release_date,window="release",extended=extended)
-    }
-  }else{
-    if(extended==F){
-      release_factors<-rotate1(release,crisis_date=crisis_date,window="release",extended=extended)
-    }else{
-      release_factors<-rotate2(release,crisis_date=extended_release_date,window="release",extended=extended)
-    }
-  }
-  conference_factors<-rotate(conference,crisis_date=crisis_date,window="conference",extended=extended)
+  release <- load_hfd(data$prw, exclude_dates = exclude_dates, date_range = date_range, reproduce = reproduce)
+  conference <- load_hfd(data$pcw, exclude_dates = exclude_dates, date_range = date_range, reproduce = reproduce)
 
-  out<-list("factors"=list("release"=release_factors,"conference"=conference_factors))
+  release_factors <- get_factors(release, crisis_date, extended, extended_release_date, "release")
+  conference_factors <- get_factors(conference, crisis_date, extended, extended_release_date, "conference")
 
-  if(loadings==T){
-    loadings_release<-loadings(release,release_factors)
-    loadings_conference<-loadings(conference,conference_factors)
-    out$loadings=list("release"=loadings_release,"conference"=loadings_conference)
-  }
-  if(return_data=="all"){
-    out$data=list("release"=load_hfd(paste0(path,"prw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
-                  "conference"=load_hfd(paste0(path,"pcw.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F),
-                  "monetary"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = F))
-  }else if(return_data=="ois"){
-    out$data=list("release"=release,
-                  "conference"=conference,
-                  "monetary"=load_hfd(paste0(path,"mew.csv"),exclude_date=exclude_date,range=range,reproduce=reproduce,select_ois = T))
-  }
-
-  if(remove_data==T){
-    unlink(paste0(path,"prw.csv"), recursive=TRUE)
-    unlink(paste0(path,"pcw.csv"), recursive=TRUE)
-    unlink(paste0(path,"mew.csv"), recursive=TRUE)
-  }
+  out <- list(
+    factors = list(release = release_factors, conference = conference_factors),
+    loadings = if (include_loadings) get_loadings(release, conference, release_factors, conference_factors) else NULL,
+    data = get_data(return_data_type, data, exclude_dates, date_range, reproduce, release, conference)
+  )
 
   return(out)
 }
 
+get_factors <- function(data, crisis_date, extended, extended_release_date, window) {
+  rotate(data, crisis_date = if (extended) extended_release_date else crisis_date, window = window, extended = extended)
+}
 
+get_loadings <- function(release, conference, release_factors, conference_factors) {
+  list(
+    release = loadings(release, release_factors),
+    conference = loadings(conference, conference_factors)
+  )
+}
 
-
+get_data <- function(return_data_type, data, exclude_dates, date_range, reproduce, release, conference) {
+  if (return_data_type == "all") {
+    list(
+      release = load_hfd(data$prw, exclude_dates = exclude_dates, date_range = date_range, reproduce = reproduce, select_ois = FALSE),
+      conference = load_hfd(data$pcw, exclude_dates = exclude_dates, date_range = date_range, reproduce = reproduce, select_ois = FALSE),
+      monetary = load_hfd(data$mew, exclude_dates = exclude_dates, date_range = date_range, reproduce = reproduce, select_ois = FALSE)
+    )
+  } else if (return_data_type == "ois") {
+    list(
+      release = release,
+      conference = conference,
+      monetary = load_hfd(data$mew, exclude_dates = exclude_dates, date_range = date_range, reproduce = reproduce, select_ois = TRUE)
+    )
+  }
+}

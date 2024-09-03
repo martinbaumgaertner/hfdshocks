@@ -7,16 +7,16 @@
 download_hfd(url, path)
 }
 \arguments{
-\item{url}{url of the high frequency data}
+\item{url}{A string. The URL of the high-frequency data (.xlsx file).}
 
-\item{store}{Defines the download location}
+\item{path}{A string. The directory where the downloaded data will be stored.}
 }
 \value{
-
+NULL. The function downloads the data and saves it as CSV files in the specified path.
 }
 \description{
-Downloads the high-frequency data from a website and store it
+Downloads high-frequency data from a specified URL and stores it in the specified path.
 }
 \examples{
-download_hfd("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",getwd())
+download_hfd("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", getwd())
 }
