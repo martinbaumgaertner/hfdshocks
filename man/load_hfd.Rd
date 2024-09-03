@@ -5,25 +5,34 @@
 \title{load_hfd}
 \usage{
 load_hfd(
-  path,
-  exclude_date = c("2001-09-17", "2008-10-08", "2008-11-06"),
-  range = c("2001-12-31", "2018-09-13")
+  data,
+  exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"),
+  date_range = c("2001-12-31", "2018-09-13"),
+  reproduce = FALSE,
+  select_ois = TRUE
 )
 }
 \arguments{
-\item{path}{path to data}
+\item{data}{A data frame containing the raw data.}
 
-\item{exclude_date}{vector of dates to exclude}
+\item{reproduce}{Logical; TRUE for exact factors Altavilla et al. 2019 factors.}
 
-\item{range}{Defines time window. Needs to be a vector of two dates}
+\item{select_ois}{Logical; TRUE to select OIS data.}
+
+\item{exclude_date}{Vector of dates to exclude.}
+
+\item{range}{Defines the time window. Needs to be a vector of two dates.}
 }
 \value{
-
+A data frame containing the preprocessed data.
 }
 \description{
-Load and preprocesses the Euro Area Monetary Policy Event-Study Database (EA-MPD)
+Load and preprocess the Euro Area Monetary Policy Event-Study Database (EA-MPD)
 }
 \examples{
-download_hfd("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",getwd())
-pcw<-load_hfd(pcw.csv,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"))
+data <- download_hfd("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", getwd())
+pcw <- load_hfd(data$pcw,
+  exclude_date = c("2001-09-17", "2008-10-08", "2008-11-06"),
+  range = c("2001-12-31", "2018-09-13")
+)
 }

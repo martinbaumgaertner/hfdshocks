@@ -4,7 +4,7 @@
 \alias{rotate}
 \title{rotate}
 \usage{
-rotate(data, crisis_date = "2008-09-04", window = "release")
+rotate(data, crisis_date = "2008-09-04", window = "release", extended = FALSE)
 }
 \arguments{
 \item{data}{specify which data to process}
@@ -12,15 +12,20 @@ rotate(data, crisis_date = "2008-09-04", window = "release")
 \item{crisis_date}{specify the starting date of the crisis for the rotation of the QE shocks}
 
 \item{window}{which window do you want to rotate? choose between "release" or "conference"}
+
+\item{extended}{logical; TRUE for extended rotation}
 }
 \value{
-
+A data frame containing the rotated factors
 }
 \description{
-Computes the rotated factor modell according to Altavilla et al. 2019
+Computes the rotated factor model according to Altavilla et al. 2019
 }
 \examples{
-download_hfd("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",getwd())
-pcw<-load_hfd(pcw.csv,exclude_date=c("2001-09-17","2008-10-08","2008-11-06"),range=c("2001-12-31","2018-09-13"))
-rotate(pcw,crisis_date="2008-09-04",window="conference")
+download_hfd("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", getwd())
+pcw <- load_hfd(pcw.csv,
+  exclude_date = c("2001-09-17", "2008-10-08", "2008-11-06"),
+  range = c("2001-12-31", "2018-09-13")
+)
+rotate(pcw, crisis_date = "2008-09-04", window = "conference")
 }
