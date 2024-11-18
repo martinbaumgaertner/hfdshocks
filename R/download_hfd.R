@@ -32,9 +32,9 @@ validate_inputs <- function(url, path) {
     stop("Please insert a link which refers to an existing .xlsx file.")
   }
 
-  if (!dir.exists(path)) {
-    stop("The specified path does not exist.")
-  }
+  #if (!dir.exists(path)) {
+  #  stop("The specified path does not exist.")
+  #}
 }
 
 download_file <- function(url, destfile) {
