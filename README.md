@@ -39,7 +39,7 @@ There are various setting options:
 
 ​	**View raw data and loadings**
 
-..use `return_data = "all"` and `loadings=T` to save the database and look into the loadings.
+..use `return_data = "all"` and `include_loadings=T` to save the database and look into the loadings.
 
 *Disclaimer: Although the methodology is not  mine, all errors are first to be credited to me personally. Please note  that this package has not yet been tested extensively. I am grateful for  every hint for improvement.*
 
@@ -51,7 +51,7 @@ library(devtools)
 devtools::install_github("https://github.com/martinbaumgaertner/hfdshocks.git") 
 
 library(hfdshocks)
-ecb_shocks(range=c("2001-12-31","2021-10-13"),crisis_date="2008-09-04",path="data/",
+ecb_shocks(date_range=c("2001-12-31","2021-10-13"),crisis_date="2008-09-04",path=".",
                  reproduce=F,extended=T,extended_release_date="2015-12-03",
-                 loadings=T,return_data = "all")
+                 include_loadings=T,return_data = "all")
 ```

@@ -11,7 +11,7 @@
 #' @importFrom tidyr pivot_longer separate
 #' @importFrom purrr map
 #' @importFrom tibble tibble
-#' @importFrom lmtest vcovHC
+#' @importFrom sandwich vcovHC
 #' @importFrom stats lm coef
 loadings <- function(ois_data, factors) {
   # Join OIS data with factors by date
@@ -31,7 +31,7 @@ loadings <- function(ois_data, factors) {
     model <- lm(ois_value ~ shock, data = data)
     tibble::tibble(
       coef = coef(model)[2],
-      ser = sqrt(lmtest::vcovHC(model)[2, 2]),
+      ser = sqrt(sandwich::vcovHC(model)[2, 2]),
       r2 = summary(model)$r.squared
     )
   })
