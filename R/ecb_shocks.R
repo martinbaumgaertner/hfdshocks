@@ -16,7 +16,7 @@
 #' @return A list containing the factors per window, the loadings per window, and the raw data per window if chosen.
 #'
 #' @examples
-#' x <- ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", "",
+#' x <- ecb_shocks("https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx", getwd(),
 #'   exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"),
 #'   date_range = c("2001-12-31", "2018-09-13"), crisis_date = "2008-09-04"
 #' )
@@ -26,7 +26,7 @@
 #' @importFrom curl curl_download
 #' @importFrom readr write_csv
 ecb_shocks <- function(url = "https://www.ecb.europa.eu/pub/pdf/annex/Dataset_EA-MPD.xlsx",
-                       path = "", exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"), date_range = c("2001-12-31", "2018-09-13"),
+                       path = getwd(), exclude_dates = c("2001-09-17", "2008-10-08", "2008-11-06"), date_range = c("2001-12-31", "2018-09-13"),
                        crisis_date = "2008-09-04", reproduce = FALSE, extended = FALSE, extended_release_date = "2015-12-03",
                        include_loadings = FALSE, return_data_type = "all") {
   data <- download_hfd(url, path)

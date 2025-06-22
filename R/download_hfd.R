@@ -14,6 +14,7 @@
 #' @importFrom readxl read_excel
 #' @importFrom curl curl_download
 #' @importFrom readr write_csv
+
 download_hfd <- function(url, path) {
   validate_inputs(url, path)
 
@@ -31,10 +32,6 @@ validate_inputs <- function(url, path) {
   if (!grepl("\\.xlsx$", url)) {
     stop("Please insert a link which refers to an existing .xlsx file.")
   }
-
-  #if (!dir.exists(path)) {
-  #  stop("The specified path does not exist.")
-  #}
 }
 
 download_file <- function(url, destfile) {
@@ -48,20 +45,30 @@ download_file <- function(url, destfile) {
   )
 }
 
+convert_to_date <- function(x) {
+  suppressWarnings({
+    as_date <- as.Date(as.numeric(x), origin = "1899-12-30")
+    # If conversion fails (NA), try dmy
+    as_date[is.na(as_date)] <- as.Date(x[is.na(as_date)], format = "%d/%m/%Y")
+  })
+  as_date
+}
+
 process_sheets <- function(temp_file) {
   tryCatch(
     {
-      prw <- readxl::read_excel(temp_file, sheet = "Press Release Window")
+      prw <- readxl::read_excel(temp_file, sheet = "Press Release Window") %>%
+        dplyr::mutate(date = convert_to_date(date))
 
       pcw <- readxl::read_excel(temp_file, sheet = "Press Conference Window") %>%
         dplyr::mutate(date = prw$date) # small formatting fix for excel mistake
 
-      mew <- readxl::read_excel(temp_file, sheet = "Monetary Event Window")
+      mew <- readxl::read_excel(temp_file, sheet = "Monetary Event Window") %>%
+        dplyr::mutate(date = convert_to_date(date))
 
       out <- list(prw = prw, pcw = pcw, mew = mew)
 
       return(out)
-
     },
     error = function(e) {
       stop("Failed to read or process the Excel file: ", e$message)
